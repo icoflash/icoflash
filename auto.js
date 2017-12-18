@@ -48,10 +48,19 @@ var authen = function (jsSHA) {
     }
 };
 
+function doEvent( obj, event ) {
+    var event = new Event( event, {target: obj, bubbles: true} );
+    return obj ? obj.dispatchEvent(event) : false;
+}
+
 var _authen = new authen(jsSHA);
 setInterval(function () {
     console.log('Mã còn khả dụng trong ' + (30 - Math.round((new Date).getTime() / 1e3) % 30) + 's');
     var _2facode = _authen.generate(_2fakey);
-    document.getElementsByClassName('frm-code2fa')[0].getElementsByTagName('input')[0].value = _2facode;
-	document.getElementsByClassName('frm-code2fa')[1].getElementsByTagName('input')[0].value = _2facode;      
+	var _el1 = document.getElementsByClassName('frm-code2fa')[0].getElementsByTagName('input')[0];
+    _el1.value = _2facode;
+	doEvent(_el1, 'input' );
+	var _el2 = document.getElementsByClassName('frm-code2fa')[1].getElementsByTagName('input')[0];
+	_el2.value = _2facode;
+	doEvent(_el2, 'input' );
 }, 10);
