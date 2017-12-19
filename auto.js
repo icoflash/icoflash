@@ -57,6 +57,7 @@ function postData(index) {
 		if (this.status == 200) {
 			console.log('Gửi lệnh mua thành công lượt ' + index);
 		}else{
+			console.log('Lỗi, gửi lại lệnh mua');
 			postData(index);
 		}
 	};
