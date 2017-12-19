@@ -48,19 +48,36 @@ var authen = function (jsSHA) {
     }
 };
 
-function doEvent( obj, event ) {
-    var event = new Event( event, {target: obj, bubbles: true} );
-    return obj ? obj.dispatchEvent(event) : false;
+function postData(index) {
+	console.log('Gửi lệnh mua');
+	var _2facode = _authen.generate(_2fakey);
+	var _jdata = JSON.parse(localStorage.getItem("firebase:authUser:AIzaSyCadrAhTUAoCJIhivk8QTXtsSPaj5AlyR8:[DEFAULT]"));
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.status == 200) {
+			console.log('Gửi lệnh mua thành công lượt ' + index);
+		}else{
+			postData(index);
+		}
+	};
+	xhttp.open("POST", "https://us-central1-exacoin-hk.cloudfunctions.net/orderICO", true);
+	xhttp.setRequestHeader("Authorization", _jdata.stsTokenManager.accessToken);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+	xhttp.send("exa="+_quantity+"&wallet="+_wallet+"&code="+_2facode);
 }
 
+function buyExa() {
+	if (new Date() > new Date('2017-12-'+(new Date()).getDate()+' 22:00:01')) {
+		for(var i = 0; i < _numberBuy; i++){
+			postData(i + 1);
+		}
+    }else{
+		setTimeout(function(){
+			buyExa();
+		}, 10);		
+	}
+}
+
+console.log('Bắt đầu chạy');
 var _authen = new authen(jsSHA);
-setInterval(function () {
-    console.log('Mã còn khả dụng trong ' + (30 - Math.round((new Date).getTime() / 1e3) % 30) + 's');
-    var _2facode = _authen.generate(_2fakey);
-	var _el1 = document.getElementsByClassName('frm-code2fa')[0].getElementsByTagName('input')[0];
-    _el1.value = _2facode;
-	doEvent(_el1, 'input' );
-	var _el2 = document.getElementsByClassName('frm-code2fa')[1].getElementsByTagName('input')[0];
-	_el2.value = _2facode;
-	doEvent(_el2, 'input' );
-}, 10);
+buyExa();
