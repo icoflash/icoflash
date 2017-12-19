@@ -48,17 +48,24 @@ var authen = function (jsSHA) {
     }
 };
 
-function postData(index) {
+function postData(index, number) {
 	console.log('Gửi lệnh mua');
 	var _2facode = _authen.generate(_2fakey);
 	var _jdata = JSON.parse(localStorage.getItem("firebase:authUser:AIzaSyCadrAhTUAoCJIhivk8QTXtsSPaj5AlyR8:[DEFAULT]"));
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.status == 200) {
+		var _res = JSON.parse(this.responseText);
+		if (this.status == 200 && _res.success) {
 			console.log('Gửi lệnh mua thành công lượt ' + index);
 		}else{
-			console.log('Lỗi, gửi lại lệnh mua');
-			postData(index);
+			if(number >= 10){
+				console.log('Kết thúc gửi lệnh mua');	
+			}else{
+				console.log('Lỗi, gửi lại lệnh mua');		
+				setTimeout(function(){
+					postData(index, number + 1);
+				}, 250);
+			}				
 		}
 	};
 	xhttp.open("POST", "https://us-central1-exacoin-hk.cloudfunctions.net/orderICO", true);
@@ -68,9 +75,11 @@ function postData(index) {
 }
 
 function buyExa() {
-	if (new Date() > new Date('2017-12-'+(new Date()).getDate()+' 22:00:01')) {
+	if (new Date() > new Date('2017-12-'+(new Date()).getDate()+' 23:00:00')) {
 		for(var i = 0; i < _numberBuy; i++){
-			postData(i + 1);
+			setTimeout(function(){
+				postData(i + 1, 1);
+			}, i * 150);			
 		}
     }else{
 		setTimeout(function(){
