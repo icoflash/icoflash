@@ -58,7 +58,7 @@ function postData(index, number) {
 		if (this.status == 200 && _res.success) {
 			console.log('Gửi lệnh mua thành công lượt ' + index);
 		}else{
-			if(number >= 10){
+			if(number >= 20){
 				console.log('Kết thúc gửi lệnh mua');	
 			}else{
 				console.log('Lỗi, gửi lại lệnh mua');		
@@ -79,7 +79,7 @@ function buyExa() {
 		for(var i = 0; i < _numberBuy; i++){
 			setTimeout(function(){
 				postData(i + 1, 1);
-			}, i * 150);			
+			}, i * 250);			
 		}
     }else{
 		setTimeout(function(){
