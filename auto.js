@@ -54,7 +54,7 @@ function postData(index, number) {
 	var _jdata = JSON.parse(localStorage.getItem("firebase:authUser:AIzaSyCadrAhTUAoCJIhivk8QTXtsSPaj5AlyR8:[DEFAULT]"));
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		var _res = JSON.parse(this.responseText);
+		var _res = this.responseText !== '' ? JSON.parse(this.responseText) : {success: false};
 		if (this.status == 200 && _res.success) {
 			console.log('Gửi lệnh mua thành công lượt ' + index);
 		}else{
