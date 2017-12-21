@@ -54,18 +54,20 @@ function postData(index, number) {
 	var _jdata = JSON.parse(localStorage.getItem("firebase:authUser:AIzaSyCadrAhTUAoCJIhivk8QTXtsSPaj5AlyR8:[DEFAULT]"));
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		var _res = this.responseText !== '' ? JSON.parse(this.responseText) : {success: false};
-		if (this.status == 200 && _res.success) {
-			console.log('Gửi lệnh mua thành công lượt ' + index);
-		}else{
-			if(number >= 20){
-				console.log('Kết thúc gửi lệnh mua');	
+		if(this.readyState == 4){
+			var _res = this.responseText !== '' ? JSON.parse(this.responseText) : {success: false};
+			if (this.status == 200 && _res.success) {
+				console.log('Gửi lệnh mua thành công lượt ' + index);
 			}else{
-				console.log('Lỗi, gửi lại lệnh mua');		
-				setTimeout(function(){
-					postData(index, number + 1);
-				}, 250);
-			}				
+				if(number >= 20){
+					console.log('Kết thúc gửi lệnh mua');	
+				}else{
+					console.log('Lỗi, gửi lại lệnh mua');		
+					setTimeout(function(){
+						postData(index, number + 1);
+					}, 250);
+				}				
+			}
 		}
 	};
 	xhttp.open("POST", "https://us-central1-exacoin-hk.cloudfunctions.net/orderICO", true);
